@@ -5,6 +5,72 @@ Link: https://www.codewars.com/kata/5d81d8571c6411001a40ba66
 '''
 
 ######################
+# Aman's Approach #
+######################
+
+import math
+import copy
+
+
+def hori_moves(ndim: 'int') -> 'list':
+    
+    temp = []
+    for x in range(0, ndim ** 2, ndim):
+        board = [i for i in range(x, x + ndim)]
+        h_move = list(enumerate(board, start=x+1))
+        h_move = [tuple(reversed(j)) for j in h_move]
+        temp.extend(h_move[:-1])
+        
+    return temp
+
+
+def box(h_moves: 'list', ndim: 'int') -> 'list':
+    
+    h_moves.sort()
+    temp = []
+    for i in h_moves:
+        temp.append([i, (i[0], i[0] + ndim), (i[1], i[1]+ndim), (i[0] + ndim, i[1] + ndim)])
+    
+    no_of_boxes = (ndim * (ndim-2)) + 1   
+    return temp[:no_of_boxes]
+  
+
+def player_change(p):
+    return 'P2' if p == 'P1' else 'P1'
+    
+    
+def dots_and_boxes(ar):
+    
+    players = {'P1' : 0, 'P2':0}
+    p = 'P1'
+    board_size = list(zip(*ar))[0] + list(zip(*ar))[1]
+    max_num = max(board_size)
+    ndim = math.sqrt(max_num + 1)
+    h_moves = hori_moves(int(ndim))
+    tot_box = box(h_moves, int(ndim))
+    
+    for i in ar:
+        c = 0
+        sorted_i = tuple(sorted(i))
+        for j in tot_box:
+            if sorted_i in j:
+                j.remove(sorted_i)
+            
+            if j == []:
+                players[p] += 1
+                j.append('empty')
+                c += 1
+        
+        if c >= 1:
+            pass
+        else:
+            p = player_change(p)
+        
+    return (players['P1'], players['P2'])
+
+
+
+######################
 # Shubham's Approach #
 ######################
 
